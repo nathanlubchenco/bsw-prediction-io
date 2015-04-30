@@ -1,0 +1,58 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Accuracy	src/main/scala/Evaluation.scala	/^case class Accuracy$/;"	c
+AccuracyEvaluation	src/main/scala/Evaluation.scala	/^object AccuracyEvaluation extends Evaluation {$/;"	o
+ActualResult	src/main/scala/Engine.scala	/^class ActualResult($/;"	c
+AlgorithmParams	src/main/scala/NaiveBayesAlgorithm.scala	/^case class AlgorithmParams($/;"	c
+ClassificationEngine	src/main/scala/Engine.scala	/^object ClassificationEngine extends IEngineFactory {$/;"	o
+CompleteEvaluation	src/main/scala/CompleteEvaluation.scala	/^object CompleteEvaluation extends Evaluation {$/;"	o
+DataSource	src/main/scala/DataSource.scala	/^class DataSource(val dsp: DataSourceParams)$/;"	c
+DataSourceParams	src/main/scala/DataSource.scala	/^case class DataSourceParams($/;"	c
+EngineParamsList	src/main/scala/Evaluation.scala	/^object EngineParamsList extends EngineParamsGenerator {$/;"	o
+NaiveBayesAlgorithm	src/main/scala/NaiveBayesAlgorithm.scala	/^class NaiveBayesAlgorithm(val ap: AlgorithmParams)$/;"	c
+Precision	src/main/scala/PrecisionEvaluation.scala	/^case class Precision(label: Double)$/;"	c
+PrecisionEvaluation	src/main/scala/PrecisionEvaluation.scala	/^object PrecisionEvaluation extends Evaluation {$/;"	o
+PredictedResult	src/main/scala/Engine.scala	/^class PredictedResult($/;"	c
+Preparator	src/main/scala/Preparator.scala	/^class Preparator extends PPreparator[TrainingData, PreparedData] {$/;"	c
+PreparedData	src/main/scala/Preparator.scala	/^class PreparedData($/;"	c
+Query	src/main/scala/Engine.scala	/^class Query($/;"	c
+Serving	src/main/scala/Serving.scala	/^class Serving extends LServing[Query, PredictedResult] {$/;"	c
+TrainingData	src/main/scala/DataSource.scala	/^class TrainingData($/;"	c
+ap	src/main/scala/NaiveBayesAlgorithm.scala	/^class NaiveBayesAlgorithm(val ap: AlgorithmParams)$/;"	C
+apply	src/main/scala/Engine.scala	/^  def apply() = {$/;"	m
+baseEP	src/main/scala/Evaluation.scala	/^  private[this] val baseEP = EngineParams($/;"	C
+calculate	src/main/scala/Evaluation.scala	/^  def calculate(query: Query, predicted: PredictedResult, actual: ActualResult)$/;"	m
+calculate	src/main/scala/PrecisionEvaluation.scala	/^  def calculate(query: Query, predicted: PredictedResult, actual: ActualResult)$/;"	m
+call	src/main/scala/DataSource.scala	/^    \/\/ into a helper function and have both readTraining and readEval call the$/;"	C
+com.bsw	src/main/scala/CompleteEvaluation.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/DataSource.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/Engine.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/Evaluation.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/NaiveBayesAlgorithm.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/PrecisionEvaluation.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/Preparator.scala	/^package com.bsw$/;"	p
+com.bsw	src/main/scala/Serving.scala	/^package com.bsw$/;"	p
+dsp	src/main/scala/DataSource.scala	/^class DataSource(val dsp: DataSourceParams)$/;"	C
+evalK	src/main/scala/DataSource.scala	/^    val evalK = dsp.evalK.get$/;"	C
+features	src/main/scala/Engine.scala	/^  val features: Array[Double]$/;"	C
+header	src/main/scala/PrecisionEvaluation.scala	/^  override def header: String = s"Precision(label = $label)"$/;"	m
+indexedPoints	src/main/scala/DataSource.scala	/^    val indexedPoints: RDD[(LabeledPoint, Long)] = labeledPoints.zipWithIndex$/;"	C
+label	src/main/scala/Engine.scala	/^  val label: Double$/;"	C
+label	src/main/scala/NaiveBayesAlgorithm.scala	/^    val label = model.predict(Vectors.dense(query.features))$/;"	C
+labeledPoints	src/main/scala/DataSource.scala	/^    val labeledPoints: RDD[LabeledPoint] = PEventStore.aggregateProperties($/;"	C
+labeledPoints	src/main/scala/DataSource.scala	/^  val labeledPoints: RDD[LabeledPoint]$/;"	C
+labeledPoints	src/main/scala/Preparator.scala	/^  val labeledPoints: RDD[LabeledPoint]$/;"	C
+logger	src/main/scala/DataSource.scala	/^  @transient lazy val logger = Logger[this.type]$/;"	C
+logger	src/main/scala/NaiveBayesAlgorithm.scala	/^  @transient lazy val logger = Logger[this.type]$/;"	C
+predict	src/main/scala/NaiveBayesAlgorithm.scala	/^  def predict(model: NaiveBayesModel, query: Query): PredictedResult = {$/;"	m
+prepare	src/main/scala/Preparator.scala	/^  def prepare(sc: SparkContext, trainingData: TrainingData): PreparedData = {$/;"	m
+readEval	src/main/scala/DataSource.scala	/^  def readEval(sc: SparkContext)$/;"	m
+readTraining	src/main/scala/DataSource.scala	/^  def readTraining(sc: SparkContext): TrainingData = {$/;"	m
+serve	src/main/scala/Serving.scala	/^  def serve(query: Query,$/;"	m
+testingPoints	src/main/scala/DataSource.scala	/^      val testingPoints = indexedPoints.filter(_._2 % evalK == idx).map(_._1)$/;"	C
+train	src/main/scala/NaiveBayesAlgorithm.scala	/^  def train(sc: SparkContext, data: PreparedData): NaiveBayesModel = {$/;"	m
+trainingPoints	src/main/scala/DataSource.scala	/^      val trainingPoints = indexedPoints.filter(_._2 % evalK != idx).map(_._1)$/;"	C
