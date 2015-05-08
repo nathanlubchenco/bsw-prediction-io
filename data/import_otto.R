@@ -44,6 +44,32 @@ create_payload <- function(feature_name, feature, id){
     )
 }
 
+extract_features <- function(row){
+  emp <- 'del'
+  cnames <- colnames(row)
+  for(i in 2:length(row)){
+    f <- paste('"', cnames[i], '" : ', row[i], sep ="")
+    emp <- paste(emp, f, sep= ",")
+  }
+  proc <- gsub("del,", "", emp)
+  
+  #paste('{ "features": [ ', proc, '] } ', sep = "")
+  proc
+}
+
+create_full_payload <- function(row){
+  paste(
+    '{
+  "event" : "$set",
+  "entityType" : "product",
+  "entityId" : ', row[1], ',
+  "properties" : {
+    ', extract_features(row), '
+  },
+  "eventTime" : "2015-04-30T05:58:24.939Z"
+}', sep = ""
+    )
+}
 post_attr <- function(feature_name, feature, id){
   
   POST(url, 
@@ -53,18 +79,34 @@ post_attr <- function(feature_name, feature, id){
        )
 }
 
+post_record <- function(row){
+  POST(url, 
+       body = create_full_payload(row),
+       encode = 'json',
+       add_headers("Content-Type" = "application/json")
+  )
+}
+
 #train <- head(train)
-train <- sample_n(train, 100)
+#train <- sample_n(train, 100)
 #exclude <- names(train) %in% c("id")
 #train <- train[!exclude]
 
 cnames <- colnames(train)
 
+#for(i in 1:nrow(train)){
+#  for(j in 2:length(cnames)){
+#    post_attr(cnames[j], train[i,j], paste(train[i,1]))
+#  }
+#  if(i %% 10 == 0){
+#    cat(i, "... \n")
+#  }
+#}
+
 for(i in 1:nrow(train)){
-  for(j in 2:length(cnames)){
-    post_attr(cnames[j], train[i,j], paste(train[i,1]))
-  }
-  if(i %% 10 == 0){
+  post_record(train[i,])
+  
+  if(i %% 1000 == 0){
     cat(i, "... \n")
   }
 }

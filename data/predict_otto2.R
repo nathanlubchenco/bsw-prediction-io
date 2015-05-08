@@ -1,5 +1,6 @@
 ##curl -H "Content-Type: application/json" -d '{ "features": [2, 0, 0] }' http://localhost:8000/queries.json
-
+# { "features": [ 0,0,0,0,0,0,0,0,0,3,0,0,0,3,2,1,0,0,0,0,0,0,0,5,3,1,1,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1,20,0,0,0,0,0] }
+# curl -H "Content-Type: application/json" -d ' {"features": [ 0,0,0,0,0,0,0,0,0,3,0,0,0,3,2,1,0,0,0,0,0,0,0,5,3,1,1,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1,20,0,0,0,0,0] }'  http://localhost:8000/queries.json
 library(data.table)
 library(httr)
 test <- read.csv("~/workspace/kaggling/otto/test.csv")
@@ -28,11 +29,19 @@ extract_features <- function(row){
     
   }
 
-test <- head(test)
+#test <- head(test)
 
 df <- data.frame()
 
 for(i in 1:nrow(test)){
-  lab <- content(predict_row(extract_features(no_id[i,])))$label
-  d <- data.frame(id = test[i,1], target = )
+  pred <- predict_row(extract_features(test[i,]))
+  lab <- content(pred)$label
+  d <- data.frame(id = test[i,1], target = lab)
+  df <- rbind(df, d)
+  
+  if(i %% 1000 == 0){
+    cat(i, "... \n")
+  }
 }
+
+write.csv(df, "/Users/nl/workspace/kaggling/otto/pio-1.csv", row.names = FALSE)

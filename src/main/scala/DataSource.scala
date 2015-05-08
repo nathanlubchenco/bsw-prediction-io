@@ -135,7 +135,7 @@ class DataSource(val dsp: DataSourceParams)
           LabeledPoint(properties.get[Double]("target"),
             Vectors.dense(Array(
  //properties.get[Double]("attr0"),
-        properties.get[Int]("feat_1"), 
+        properties.get[Double]("feat_1"), 
         properties.get[Double]("feat_2"), 
         properties.get[Double]("feat_3"), 
         properties.get[Double]("feat_4"), 
