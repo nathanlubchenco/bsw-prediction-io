@@ -1,11 +1,12 @@
-library(RCurl)
 library(jsonlite)
 library(httr)
 
 train <- read.csv("~/workspace/kaggling/otto/train.csv")
 
+# replace accessKey with access key for your app
 url <- "http://localhost:7070/events.json?accessKey=V4aJ8mxUHFaCcLa9cqB451ygIRB1I5JAkokMIwoQByiTgovtqWId589mgVf2GGWJ"
 
+# conversion to numerics for pio compatibility
 train$target <- mapply(function(var){
   if(var == "Class_1"){
     return(1)
@@ -30,6 +31,7 @@ train$target <- mapply(function(var){
   }}
 , train$target)
 
+# for single attribute
 create_payload <- function(feature_name, feature, id){
   paste(
     '{
@@ -52,11 +54,10 @@ extract_features <- function(row){
     emp <- paste(emp, f, sep= ",")
   }
   proc <- gsub("del,", "", emp)
-  
-  #paste('{ "features": [ ', proc, '] } ', sep = "")
   proc
 }
 
+# for all attributes (roughly 100x speedup)
 create_full_payload <- function(row){
   paste(
     '{
@@ -70,6 +71,8 @@ create_full_payload <- function(row){
 }', sep = ""
     )
 }
+
+# for single attribute
 post_attr <- function(feature_name, feature, id){
   
   POST(url, 
@@ -79,6 +82,7 @@ post_attr <- function(feature_name, feature, id){
        )
 }
 
+# for all attributes
 post_record <- function(row){
   POST(url, 
        body = create_full_payload(row),
@@ -87,22 +91,10 @@ post_record <- function(row){
   )
 }
 
-#train <- head(train)
-#train <- sample_n(train, 100)
-#exclude <- names(train) %in% c("id")
-#train <- train[!exclude]
-
 cnames <- colnames(train)
 
-#for(i in 1:nrow(train)){
-#  for(j in 2:length(cnames)){
-#    post_attr(cnames[j], train[i,j], paste(train[i,1]))
-#  }
-#  if(i %% 10 == 0){
-#    cat(i, "... \n")
-#  }
-#}
-
+# loop through all records and post each record
+# very slow, recommend investigating other methods of batch uploading
 for(i in 1:nrow(train)){
   post_record(train[i,])
   

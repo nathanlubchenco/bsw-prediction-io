@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BSW - PredictionIO</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code {font-size: 12px;} 
+      .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 10px;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+### Boulder Startup Week 2015
+# Using PredictionIO to Classify Products
+## Nathan Lubchenco
+#### @nathanlubchenco @datadeveloped
+#### nathan@datadeveloped.consulting
+#### https://github.com/nathanlubchenco/bsw-prediction-io
+
+---
+
+# PredictionIO 
+
+1. Machine Learning Server 
+  + Built on top of Apache Spark, HBase and Spray
+  + Open Source
+  
+2. DASE architecture
+  + Data
+  + Algorithm
+  + Serving
+  + Evaluation
+
+---
+# Example Overview
+
+1. Data from Large Online Retailer (Otto)
+  * Classify Products from the catalogue into appropriate categories
+  
+2. Availible as part of a Kaggle Competition
+
+3. 93 obfuscated features, 9 possible classes
+
+4. Using naive bayes as classifier
+  * default classifier included in template
+
+---
+
+# Getting Started
+
+Start the Server
+```
+pio-start-all
+pio eventserver
+```
+Can check status with
+```
+pio status
+```
+Next we'll 
+* ingest data
+* check to insure the data was ingested
+
+---
+# Ingest Data 
+```
+curl -X POST -v -H "Content-Type: application/json" -d '{
+  "event" : "$set",
+  "entityType" : "product",
+  "entityId" : 1,
+  "properties" : {
+  "feat_1" : 1,"feat_2" : 0,"feat_3" : 0,"feat_4" : 0,"feat_5" : 0,"feat_6" : 0,
+  "feat_7" : 0,"feat_8" : 0,"feat_9" : 0,"feat_10" : 0,"feat_11" : 1,"feat_12" : 0,
+  "feat_13" : 0,"feat_14" : 0,"feat_15" : 0,"feat_16" : 0,"feat_17" : 2,"feat_18" : 0,
+  "feat_19" : 0,"feat_20" : 0,"feat_21" : 0,"feat_22" : 1,"feat_23" : 0,"feat_24" : 4,
+  "feat_25" : 1,"feat_26" : 1,"feat_27" : 0,"feat_28" : 0,"feat_29" : 2,"feat_30" : 0,
+  "feat_31" : 0,"feat_32" : 0,"feat_33" : 0,"feat_34" : 0,"feat_35" : 1,"feat_36" : 0,
+  "feat_37" : 0,"feat_38" : 0,"feat_39" : 0,"feat_40" : 1,"feat_41" : 0,"feat_42" : 5,
+  "feat_43" : 0,"feat_44" : 0,"feat_45" : 0,"feat_46" : 0,"feat_47" : 0,"feat_48" : 2,
+  "feat_49" : 0,"feat_50" : 0,"feat_51" : 0,"feat_52" : 0,"feat_53" : 0,"feat_54" : 1,
+  "feat_55" : 0,"feat_56" : 0,"feat_57" : 2,"feat_58" : 0,"feat_59" : 0,"feat_60" : 11,
+  "feat_61" : 0,"feat_62" : 1,"feat_63" : 1,"feat_64" : 0,"feat_65" : 1,"feat_66" : 0,
+  "feat_67" : 7,"feat_68" : 0,"feat_69" : 0,"feat_70" : 0,"feat_71" : 1,"feat_72" : 0,
+  "feat_73" : 0,"feat_74" : 0,"feat_75" : 0,"feat_76" : 0,"feat_77" : 0,"feat_78" : 0,
+  "feat_79" : 2,"feat_80" : 1,"feat_81" : 0,"feat_82" : 0,"feat_83" : 0,"feat_84" : 0,
+  "feat_85" : 1,"feat_86" : 0,"feat_87" : 0,"feat_88" : 0,"feat_89" : 0,"feat_90" : 0,
+  "feat_91" : 0,"feat_92" : 0,"feat_93" : 0,"target" : 1
+  },
+  "eventTime" : "2015-04-30T05:58:24.939Z"
+  }' http://localhost:7070/events.json?accessKey=\
+  V4aJ8mxUHFaCcLa9cqB451ygIRB1I5JAkokMIwoQByiTgovtqWId589mgVf2GGWJ
+```
+---
+# Insure Data Ingested
+
+Check Particular Event
+```
+curl -X GET http://localhost:7070/events/QvHi-gS8RtK9ItEVFNtmIwAAAU0I55erqcdo0PySxhQ.json?accessKey=\
+V4aJ8mxUHFaCcLa9cqB451ygIRB1I5JAkokMIwoQByiTgovtqWId589mgVf2GGWJ
+```
+Check Events In General
+```
+curl -X GET http://localhost:7070/events.json?accessKey=\
+V4aJ8mxUHFaCcLa9cqB451ygIRB1I5JAkokMIwoQByiTgovtqWId589mgVf2GGWJ&limit=10
+```
+
+Default limit is 20
+
+---
+# Train and Deploy
+
+```
+pio build
+pio train
+pio deploy
+```
+# Use model to classify new data
+```
+curl -H "Content-Type: application/json" -d ' {"features": 
+[ 0,0,0,0,0,0,0,0,0,3,0,0,0,3,2,1,0,0,0,0,0,0,0,5,3,1,1,0,0
+,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,3,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1,20,0,0,0,0,0]
+}'  http://localhost:8000/queries.json
+
+```
+---
+# Evaluate Model 
+```
+pio eval com.bsw.AccuracyEvaluation com.bsw.EngineParamsList
+pio dashboard
+```
+
+```
+Optimal Engine Params:
+  {
+  "dataSourceParams":{
+    "":{
+      "appName":"kaggle-otto-2",
+      "evalK":5
+    }
+  },
+  "preparatorParams":{
+    "":{
+
+    }
+  },
+  "algorithmParamsList":[
+    {
+      "naive":{
+        "lambda":1000.0
+      }
+    }
+  ],
+  "servingParams":{
+    "":{
+
+    }
+  }
+}
+Metrics:
+  Accuracy: 0.6886615598435654
+The best variant params can be found in best.json
+```
+---
+# Questions?
+
+```
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+```
+
+#### @nathanlubchenco @datadeveloped
+#### nathan@datadeveloped.consulting
+#### https://github.com/nathanlubchenco/bsw-prediction-io
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
